@@ -4,10 +4,10 @@ def encode_bits(signal):
     signal = (-1)**signal
     return signal
 
-def add_noise(signal, snr, r):
+def add_noise(signal, EbN0, r):
     # signal: bit stream of length n
     # snr: rate * snr := k*Eb/(N*N0)
-    variance = 1 / (2*r*snr)
+    variance = 1 / (2*r*10**(EbN0/10))
     noise = np.random.normal(0, np.sqrt(variance), signal.shape)
     noisy_signal = signal + noise
     return noisy_signal

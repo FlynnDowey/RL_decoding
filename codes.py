@@ -1,21 +1,44 @@
 import numpy as np
+from scipy.io import loadmat
 from itertools import product
 
-class HammingCode:
-    def __init__(self, n, k, H=None, G=None):
+class BlockCode:
+    def __init__(self, n, k):
         self.n = n
         self.k = k
-        self.r = n - k
+        self.r = n-k
+        self.H, self.G = self.init_H_and_G(n, k)
+        self.filename = None
 
-        if H is None:
-            self.H = self.init_H(self.r)
-        else:
-            self.H = H
-        if G is None:
-            self.G = self.init_G(self.r)
-        else:
-            self.G = G
+    def init_H_and_G(self, n, k):
+        mat = loadmat(self.filename)
+        H = mat['H']
+        G = mat['G'].T
+        return H, G
+    
+    def encode(self, message):
+        c = self.G@message.T % 2
+        return c
+    def syndrome(self, codeword):
+        return self.H@codeword.T %2
+    
+class BCH(BlockCode):
+    def __init__(self, n, k):
+        self.filename = 'Hmat/BCH_'+ str(n) + '_' + str(k) + '_std.mat'
+        super().__init__(n, k)
 
+
+class RM(BlockCode):
+    def __init__(self, n, k):
+        super().__init__(n, k)
+        self.filename = 'Hmat/RM_'+ str(n) + '_' + str(k) + '_std.mat'
+    
+## Old Code (not used) ##
+
+class HammingCode(BlockCode):
+    def __init__(self, n, k):
+        super().__init__(n, k)
+        
     def init_H(self,r):
         tmp = list(product([0, 1], repeat=r))
         tmp_arr = np.array(tmp).T
@@ -30,4 +53,3 @@ class HammingCode:
         return c
     def syndrome(self, codeword):
         return self.H@codeword.T %2
-    

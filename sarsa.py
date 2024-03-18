@@ -22,9 +22,9 @@ def sarsa(env, num_episodes, alpha, mov_avg, gamma=1.0):
 
     # initialize performance monitor
     # loop over episodes
-    eps = 0.999
+    eps = 0.9
     for i_episode in range(1, num_episodes+1):
-        eps /= i_episode + 1
+        eps = eps*np.exp(-i_episode)
         # monitor progress
         if i_episode % 100 == 0:
             print("\rEpisode {}/{}".format(i_episode, num_episodes), end="")
