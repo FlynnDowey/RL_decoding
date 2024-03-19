@@ -27,11 +27,10 @@ class BCH(BlockCode):
         self.filename = 'Hmat/BCH_'+ str(n) + '_' + str(k) + '_std.mat'
         super().__init__(n, k)
 
-
 class RM(BlockCode):
     def __init__(self, n, k):
-        super().__init__(n, k)
         self.filename = 'Hmat/RM_'+ str(n) + '_' + str(k) + '_std.mat'
+        super().__init__(n, k)
     
 ## Old Code (not used) ##
 
