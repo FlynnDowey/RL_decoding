@@ -23,7 +23,7 @@ def train(env, num_episodes, alpha, mov_avg=1000, gamma=0.99, EbN0=1):
             eps = max(eps*0.99, 1e-6)
 
         # monitor progress
-        if i_episode % 100 == 0:
+        if i_episode % 10000 == 0:
             print("\rEpisode {}/{}".format(i_episode, num_episodes), end="")
             sys.stdout.flush()   
         
@@ -52,15 +52,15 @@ def train(env, num_episodes, alpha, mov_avg=1000, gamma=0.99, EbN0=1):
     plt.plot(np.linspace(0,num_episodes,len(avg_scores), endpoint=False), np.asarray(avg_scores))
     plt.xlabel('Episode Number')
     plt.ylabel('Average Reward (Over Next %d Episodes)' % mov_avg)
+    plt.savefig('./figs/reward_fun_sarsa_RM_3_6.png')
     plt.show()
     print(('Best Average Reward over %d Episodes: ' % mov_avg), np.max(avg_scores))    
     return Q
 
 def test(env, num_runs, optimal_Q, EbN0=0.1):
     BER = 0
-    env.mode(False)
     policy = lambda state : np.argmax(optimal_Q[state])
-    env.set_EbN0(EbN0)
+    env.set_noise(EbN0)
     for iter in range(num_runs):
         state = env.reset()
         if np.all(optimal_Q[state][0]) == 0:
@@ -75,5 +75,5 @@ def test(env, num_runs, optimal_Q, EbN0=0.1):
                 action = next_action
             if done:
                 break
-        BER += np.sum(env.z ^ env.z_true) / len(env.z)
+        BER += np.sum(env.z ^ env.codeword) / len(env.z)
     return BER/num_runs

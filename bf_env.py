@@ -27,10 +27,13 @@ class BitFlippingEnv(gym.Env):
         self.residual = np.sum(self.codeword)
         self.num_actions = 0
         self.state = (tuple(self.code.syndrome(self.z)), self.residual)
-
-        llr = np.log((1 - self.noise) / self.noise) * (1 - 2*self.z)
+        if self.channel_type == 'BSC':
+            llr = np.log((1 - self.noise) / self.noise) * self.z
+        elif self.channel_type == 'AWGN':
+            self.sigma2 = 1/(2*self.r*10**(self.noise/10))
+            llr = 2*self.z/self.sigma2 # LLRs
+            
         self.llr_avg = np.abs(llr)
-
         return self.state
 
     def step(self, action):
@@ -42,7 +45,12 @@ class BitFlippingEnv(gym.Env):
         self.state = self.code.syndrome(self.z) # Flip the bit
         
         # Method used in paper (need to review):
-        llr = np.log((1 - self.noise) / self.noise) * (1 - 2*self.z)
+        if self.channel_type == 'BSC':
+            llr = np.log((1 - self.noise) / self.noise) * self.z
+        elif self.channel_type == 'AWGN':
+            llr = 2*self.z/self.sigma2 # LLRs
+
+
         self.llr_avg = (self.num_actions*self.llr_avg + np.abs(llr)) / (self.num_actions + 1)
         self.path_penality = - self.llr_avg / (10*np.mean(self.llr_avg))
 
