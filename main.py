@@ -29,8 +29,8 @@ def plot_BER(x_vars, y_vars, units, title):
     plt.title(title)
     plt.grid(visible=True, which='both', axis='y')
     plt.grid(visible=True, which='major', axis='x')
-    plt.savefig('./figs/' + figure_name + '.png')
     plt.legend()
+    plt.savefig('./figs/' + figure_name + '.png')
     plt.show()
 
 
@@ -63,8 +63,8 @@ if __name__ == '__main__':
             Q_sarsa = pickle.load(file)
     elif train == True:
         Q_sarsa = sarsa.train(env, int(3e6), 0.1)
-        with open('./policies/' + policy_name + '.pkl', 'wb') as file:
-            pickle.dump(Q_sarsa, file)
+        # with open('./policies/' + policy_name + '.pkl', 'wb') as file:
+        #     pickle.dump(Q_sarsa, file)
     
     ## Evaluate model ##
     BER = []

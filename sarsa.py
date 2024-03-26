@@ -61,19 +61,25 @@ def test(env, num_runs, optimal_Q, EbN0=0.1):
     BER = 0
     policy = lambda state : np.argmax(optimal_Q[state])
     env.set_noise(EbN0)
+    max_iters = 10
     for iter in range(num_runs):
         state = env.reset()
         if np.all(optimal_Q[state][0]) == 0:
             print("Agent has not seen codeword yet.")
             break
         action = policy(state)
+        i = 0
         while True:
             next_state, _, done, _ = env.step(action)
-            if not done:
+            if not done and i < max_iters:
                 next_action = policy(next_state)
                 state = next_state
                 action = next_action
             if done:
                 break
+            if i >= max_iters:
+                print("Agent unable to decode")
+                break
+            i += 1
         BER += np.sum(env.z ^ env.codeword) / len(env.z)
     return BER/num_runs
