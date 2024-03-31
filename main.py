@@ -19,7 +19,7 @@ def RM_agent(label):
     return rm
 
 def plot_BER(x_vars, y_vars, units, title):
-    mat = loadmat('./benchmark/BER_RM_AWGN_3_6.mat')
+    mat = loadmat('./benchmark/BER_RM_BSC_3_6.mat')
     bench = mat['BER']
     bench = bench[:, 0]
 
@@ -43,10 +43,11 @@ if __name__ == '__main__':
     code_label = ('3', '6')
 
     ## Define channel characteristics ##
-    channel = 'AWGN'
-    noise = 4
-    dB_range = np.linspace(1, 7, 10) # (dB) or probabilities
-    # dB_range = np.linspace(0.01, 0.45, 10)
+    channel = 'BSC'
+    # noise = 4
+    noise = 0.2
+    # dB_range = np.linspace(1, 7, 10) # (dB) or probabilities
+    dB_range = np.linspace(0.01, 0.45, 10)
 
     ## saving ##
     policy_name = "Q_sarsa_" + code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel
