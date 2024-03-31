@@ -1,33 +1,29 @@
 import numpy as np
 n = 7; k = 4 # hamming code (7, 4)
 rate = k / n
-theta=0.2
 
-rng = np.random.default_rng()
-noise = (rng.random(n) <= theta).astype(int)
+noise = 1
+sigma2 = 1/(2*rate*10**(noise/10))
+
+def encode_bits(signal):
+    signal = (-1)**signal
+    return signal
 
 H = np.array([[1, 1, 0, 1, 1, 0, 0],[1, 0, 1, 1, 0, 1, 0], [0, 1, 1, 1, 0, 0, 1]], dtype=int)
 G = np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1], [1, 1, 0, 1], [1, 0, 1, 1], [0, 1, 1, 1]], dtype=int)
 x = np.array([0, 1, 1, 0], dtype=int)
 c = G@x.T % 2
 
-w = np.array([0, 0, 1, 0, 0, 0, 0], dtype=int)
-z = (c + w) % 2
+z_BPSK = np.random.randn(7)
+c_BPSK = encode_bits(c)
 
-print(f"true codeword c = ({c})")
-print(f"recieved codeword z = ({z})")
+llr = 2*z_BPSK/sigma2
 
-Q = np.zeros(n, dtype=int)
-while np.any(H@z.T % 2)!= 0:
-    s = H@z.T % 2 # syndrome
-    V = np.sum(s) # sum the number of 1s in Hc
-    for i in range(n):
-        e = np.zeros(n, dtype=int)
-        e[i] = 1
-        _s = H@(z + e).T % 2
-        Q[i] = V - np.sum(_s) # store the most likely index that an error occured
+print(f"true codeword c = ({c_BPSK})")
+print(f"recieved codeword z = ({z_BPSK})")
+print(f"{llr}")
 
-    e = np.zeros(n, dtype=int)
-    # correct the error
-    e[np.argmax(Q)] = 1 
-    z = (z + e)%2
+z_BPSK[4] = -1
+llr = 2*z_BPSK/sigma2
+print(f"{llr}")
+

@@ -15,7 +15,7 @@ def AWGN(signal, EbN0, r):
     variance = 1 / (2*r*10**(EbN0/10))
     noise = np.random.normal(0, np.sqrt(variance), signal.shape)
     noisy_signal = encode_bits(signal) + noise
-    return decode_bits(noisy_signal)
+    return noisy_signal
 
 def BSC(signal, theta):
     rng = np.random.default_rng()

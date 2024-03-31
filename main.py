@@ -2,7 +2,8 @@ from bf_env import BitFlippingEnv
 import numpy as np
 import channel
 import codes
-import sarsa
+# import sarsa
+import sarsa_param
 import matplotlib.pyplot as plt
 import dill as pickle
 import os
@@ -18,7 +19,7 @@ def RM_agent(label):
     return rm
 
 def plot_BER(x_vars, y_vars, units, title):
-    mat = loadmat('./benchmark/BER_BCH_63_45.mat')
+    mat = loadmat('./benchmark/BER_RM_AWGN_3_6.mat')
     bench = mat['BER']
     bench = bench[:, 0]
 
@@ -35,21 +36,22 @@ def plot_BER(x_vars, y_vars, units, title):
 
 
 if __name__ == '__main__':
-    train = False
+    train = True
 
     ## Define the code ##
-    code_type = 'BCH'
-    code_label = ('63', '45')
+    code_type = 'RM'
+    code_label = ('3', '6')
 
     ## Define channel characteristics ##
-    channel = 'BSC'
-    noise = 0.2
-    # dB_range = np.linspace(1, 4, 10) # (dB) or probabilities
-    dB_range = np.linspace(0.01, 0.45, 10)
+    channel = 'AWGN'
+    noise = 4
+    dB_range = np.linspace(1, 7, 10) # (dB) or probabilities
+    # dB_range = np.linspace(0.01, 0.45, 10)
 
     ## saving ##
     policy_name = "Q_sarsa_" + code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel
-    figure_name = "BER_sarsa_" + code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel
+    figure_name = "BER_sarsa_parameterized" + code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel
+
     ## Get code environment ##
     if code_type == 'RM':
         agent = RM_agent(code_label)
@@ -62,17 +64,17 @@ if __name__ == '__main__':
         with open('./policies/' + policy_name + '.pkl', 'rb') as file:
             Q_sarsa = pickle.load(file)
     elif train == True:
-        Q_sarsa = sarsa.train(env, int(3e6), 0.1)
+        Q_sarsa = sarsa_param.train(env, int(3e5), 0.1)
         # with open('./policies/' + policy_name + '.pkl', 'wb') as file:
         #     pickle.dump(Q_sarsa, file)
     
     ## Evaluate model ##
     BER = []
     for snr_i in dB_range:
-        BER.append(sarsa.test(env, 1000, Q_sarsa, EbN0=snr_i))
+        BER.append(sarsa_param.test(env, 1000, Q_sarsa, EbN0=snr_i))
 
     ## Plotting ##
-    name = channel + " " + code_type + "[" + code_label[0] + ", " + code_label[1] + "]"
+    name = channel + " " + code_type + "[" + code_label[0] + ", " + code_label[1] + "]" 
     if channel == 'BSC':
         x_range = [1-x for x in dB_range]
         plot_BER(x_range, BER, '1 - prob. error in BSC', name)

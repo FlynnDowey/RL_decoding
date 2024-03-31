@@ -2,6 +2,7 @@ import gym
 from gym import spaces
 import numpy as np
 import channel
+import math
 from scipy.stats import norm
 
 class BitFlippingEnv(gym.Env):
@@ -23,15 +24,25 @@ class BitFlippingEnv(gym.Env):
         self.noise = noise
 
     def reset(self):
-        self.z = self.trx_message()
+        if self.channel_type == 'AWGN':
+            self.z_double = self.trx_message()
+            self.z = channel.decode_bits(self.z_double)
+        else:
+            self.z = self.trx_message()
+
         self.residual = np.sum(self.codeword)
         self.num_actions = 0
         self.state = (tuple(self.code.syndrome(self.z)), self.residual)
         if self.channel_type == 'BSC':
             llr = np.log((1 - self.noise) / self.noise) * self.z
         elif self.channel_type == 'AWGN':
+            # LLR: 
+            #   - +ve value = more likely to be a zero
+            #   - -ve value = more likely to be a one
+            #   - smaller magnitude = less confident (we should flip)
+
             self.sigma2 = 1/(2*self.r*10**(self.noise/10))
-            llr = 2*self.z/self.sigma2 # LLRs
+            llr = 2*self.z_double/self.sigma2 # LLRs
             
         self.llr_avg = np.abs(llr)
         return self.state
@@ -48,14 +59,19 @@ class BitFlippingEnv(gym.Env):
         if self.channel_type == 'BSC':
             llr = np.log((1 - self.noise) / self.noise) * self.z
         elif self.channel_type == 'AWGN':
+            # if the bit we flipped has a postive LLR then it is a zero
+            # if the bit we flipped has a negative LLR then it is a one
+            # BPSK: {0, 1} -> {1, -1}
+            newbit = 1 if np.sign(self.z_double[action]) > 0 else -1
+            self.z_double[action] = newbit
             llr = 2*self.z/self.sigma2 # LLRs
 
 
         self.llr_avg = (self.num_actions*self.llr_avg + np.abs(llr)) / (self.num_actions + 1)
-        self.path_penality = - self.llr_avg / (10*np.mean(self.llr_avg))
-
+        self.path_penalty = - self.llr_avg / (10*np.mean(self.llr_avg))
+        # self.path_penalty = - llr / (10 * self.llr_avg)
         done = self.num_actions == 10 or np.all(self.state == 0)
-        reward = self.path_penality[action]
+        reward = self.path_penalty[action]
 
         if np.all(self.state == 0):
             reward += 1
@@ -71,7 +87,6 @@ class BitFlippingEnv(gym.Env):
         pass
 
     def trx_message(self):
-        np.random.seed(1)
         message = np.random.randint(0, 2, size=self.k)
         # message = np.zeros(self.k)
         self.codeword = self.code.encode(message)
