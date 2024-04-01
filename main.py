@@ -5,7 +5,7 @@ import codes
 # import sarsa
 import sarsa_param
 import matplotlib.pyplot as plt
-import dill as pickle
+# import dill as pickle
 import os
 from scipy.io import loadmat
 
@@ -61,11 +61,11 @@ if __name__ == '__main__':
     
     env = BitFlippingEnv(agent, channel, noise)
 
-    if os.path.exists('./policies/' + policy_name + '.pkl') and train == False:
-        with open('./policies/' + policy_name + '.pkl', 'rb') as file:
-            Q_sarsa = pickle.load(file)
-    elif train == True:
-        Q_sarsa = sarsa_param.train(env, int(3e5), 0.1)
+    # if os.path.exists('./policies/' + policy_name + '.pkl') and train == False:
+        # with open('./policies/' + policy_name + '.pkl', 'rb') as file:
+        #     Q_sarsa = pickle.load(file)
+    # elif train == True:
+    Q_sarsa = sarsa_param.train(env, int(3e5), 0.1)
         # with open('./policies/' + policy_name + '.pkl', 'wb') as file:
         #     pickle.dump(Q_sarsa, file)
     
