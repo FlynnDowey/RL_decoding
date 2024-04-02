@@ -1,3 +1,5 @@
+## About
+This repository implements the results found in [Reinforcement Learning for Channel Coding: Learned Bit-Flipping Decoding](https://arxiv.org/abs/1906.04448)
 ## Preliminaries 
 Create a venv:
 1. ``` pip install virtualenv ```
@@ -17,7 +19,7 @@ Download requirements.txt:
 
 ## Folders
 - ```/Hmat``` holds generator and parity check matricies for codes in .mat format; see [here](https://github.com/fabriziocarpi/RLdecoding)
-- ```/MATLAB`` runs benchmark decoding algorithms in matlab
+- ```/MATLAB``` runs benchmark decoding algorithms in matlab
 - ```/policies``` saves the Q table for a specific code after training the agent using sarsa (too large for repository)
 - ```/benchmark``` holds .mat files for BER using MATLAB decoding algorithms
 - ```/figs``` figures from training and BER comparison
