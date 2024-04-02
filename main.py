@@ -188,7 +188,7 @@ def BHC_AWGN():
     name = channel + " " + code_type + "[" + code_label[0] + ", " + code_label[1] + "]" 
 
     # plot results
-    plot_BER(dB_range, BER_tabular, BER_param, bench, 'dB', name, figure_name)
+    plot_BER(dB_range, BER_tabular, BER_param, bench, 'SNR (dB)', name, figure_name)
 
 ####################################################################################################################
 # 5. RM with AWGN
@@ -223,7 +223,7 @@ def RM_AWGN():
     name = channel + " " + code_type + "[" + code_label[0] + ", " + code_label[1] + "]" 
 
     # plot results
-    plot_BER(dB_range, BER_tabular, BER_param, bench, 'dB', name, figure_name)
+    plot_BER(dB_range, BER_tabular, BER_param, bench, 'SNR (dB)', name, figure_name)
 
 if __name__ == "__main__":
     main()

@@ -7,7 +7,7 @@ def plot_BER(x_vars, y_tab, y_param,  bench, units, title, figure_name):
     plt.semilogy(x_vars, y_tab, marker='o', fillstyle='none', linestyle='--', linewidth=1.5, markersize=8, label='Tabular sarsa')
     plt.semilogy(x_vars, bench, marker='o', fillstyle='none', linestyle='--', linewidth=1.5, markersize=8, label='Matlab')
     plt.semilogy(x_vars, y_param, marker='o', fillstyle='none', linestyle='--', linewidth=1.5, markersize=8, label='NN sarsa')
-    plt.xlabel('Noise (' + units + ')')
+    plt.xlabel(units)
     plt.ylabel('BER')
     plt.title(title)
     plt.grid(visible=True, which='both', axis='y')
