@@ -14,7 +14,7 @@ def plot_BER(x_vars, y_tab, y_param,  bench, units, title, figure_name):
     plt.grid(visible=True, which='major', axis='x')
     plt.legend()
     plt.savefig('./figs/' + figure_name + '.png')
-    plt.show()
+    # plt.show()
 
 _funcs = {}
 

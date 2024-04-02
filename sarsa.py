@@ -54,7 +54,7 @@ def train(env, num_episodes, alpha, mov_avg=1000, gamma=0.99, EbN0=1):
     plt.xlabel('Episode Number')
     plt.ylabel('Average Reward (Over Next %d Episodes)' % mov_avg)
     plt.savefig('./figs/reward_fun_sarsa_RM_3_6.png')
-    plt.show()
+    # plt.show()
     print(('Best Average Reward over %d Episodes: ' % mov_avg), np.max(avg_scores))   
     env.Q = Q 
     return Q
