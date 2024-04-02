@@ -6,7 +6,7 @@ import torch
 
 def epsilon_greedy(Q, state, nA, eps):
     if np.random.random() > eps: # select greedy action with probability epsilon
-        return np.argmax([Q(state, a) for a in range(nA)])
+        return np.argmax([sum(Q(state, a)) for a in range(nA)])
     else:                     # otherwise, select an action randomly
         return np.random.choice(np.arange(nA))
     
@@ -85,8 +85,8 @@ def train(env, num_episodes, alpha, mov_avg=1000, gamma=0.99, EbN0=1):
 
                 optimizer.zero_grad()
 
-                loss = td_error
-                loss.backward(torch.ones_like(td_error))
+                loss = torch.mean(td_error)
+                loss.backward()
 
                 optimizer.step()
 
@@ -106,21 +106,24 @@ def train(env, num_episodes, alpha, mov_avg=1000, gamma=0.99, EbN0=1):
     plt.savefig('./figs/reward_fun_sarsa_RM_3_6.png')
     plt.show()
     print(('Best Average Reward over %d Episodes: ' % mov_avg), np.max(avg_scores))    
-    return w, v
+    env.w = w.detach().numpy()
+    env.v = v.detach().numpy()
+    return w.detach().numpy(), v.detach().numpy()
 
-def test(env, num_runs, w, EbN0=0.1):
+def test(env, num_runs, w, v, EbN0=0.1):
     BER = 0
     env.set_noise(EbN0)
     max_iters = 10
+    d = 3 + env.m
     for iter in range(num_runs):
         state = env.reset()
-        function = lambda s, a: w@feature_vector_nn(s, a, env.m + 3)
-        action = np.argmax([function(state, a) for a in range(env.n)])
+        function = lambda s, a: v@torch.relu(torch.from_numpy(w@feature_vector_nn(s, a, d))).numpy()
+        action = np.argmax([sum(function(state, a)) for a in range(env.n)])
         i = 0
         while True:
             next_state, _, done, _ = env.step(action)
             if not done and i < max_iters:
-                next_action = np.argmax([function(next_state, a) for a in range(env.n)])
+                next_action = np.argmax([sum(function(next_state, a)) for a in range(env.n)])
                 state = next_state
                 action = next_action
             if done:
