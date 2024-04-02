@@ -45,10 +45,10 @@ def fit(agent, channel, noise, type=None):
     """
     env = BitFlippingEnv(agent, channel, noise)
     if type == 'tabular':
-        Q = sarsa.train(env, int(3e6), 0.1)
+        Q = sarsa.train(env, int(3e5), 0.1)
         return Q, env
     elif type == 'param':
-        w, v = sarsa_param.train(env, int(3e5), 0.01)
+        w, v = sarsa_param.train(env, int(3e3), 0.1)
         return w, v, env
     else:
         raise ValueError("Invalid type. Specify type as tabular or param")
@@ -91,11 +91,11 @@ def BHC_BSC():
     code_type = 'BCH'
     code_label = ('63', '45')
     channel = 'BSC'
-    noise = 0.2 # training noise
+    noise = 0.1 # training noise
     dB_range = np.linspace(0.01, 0.45, 10) # testing noise
 
     # saving
-    figure_name = "BER_sarsa" + code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel
+    figure_name = "BER_sarsa" +"_"+ code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel
 
     # tabular setting
     agent_tabular = BCH_agent()
@@ -127,11 +127,11 @@ def RM_BSC():
     code_type = 'RM'
     code_label = ('3', '6')
     channel = 'BSC'
-    noise = 0.2 # training noise
+    noise = 0.1 # training noise
     dB_range = np.linspace(0.01, 0.45, 10) # testing noise
 
     # saving
-    figure_name = "BER_sarsa" + code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel
+    figure_name = "BER_sarsa_" + code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel
 
     # tabular setting
     agent_tabular = BCH_agent()
@@ -163,11 +163,11 @@ def BHC_AWGN():
     code_type = 'BCH'
     code_label = ('63', '45')
     channel = 'AWGN'
-    noise = 2 # training noise
+    noise = 4 # training noise
     dB_range = np.linspace(1, 7, 10) # testing noise
 
     # saving
-    figure_name = "BER_sarsa" + code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel
+    figure_name = "BER_sarsa_" + code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel
 
     # tabular setting
     agent_tabular = BCH_agent()
@@ -198,11 +198,11 @@ def RM_AWGN():
     code_type = 'RM'
     code_label = ('3', '6')
     channel = 'AWGN'
-    noise = 2 # training noise
+    noise = 4 # training noise
     dB_range = np.linspace(1, 7, 10) # testing noise
 
     # saving
-    figure_name = "BER_sarsa" + code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel
+    figure_name = "BER_sarsa_" + code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel
 
     # tabular setting
     agent_tabular = BCH_agent()
