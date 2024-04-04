@@ -30,9 +30,10 @@ class BitFlippingEnv(gym.Env):
         else:
             self.z = self.trx_message()
 
-        self.residual = np.sum(self.codeword)
+        # self.residual = np.sum(self.codeword)
         self.num_actions = 0
-        self.state = (tuple(self.code.syndrome(self.z)), self.residual)
+        # self.state = (tuple(self.code.syndrome(self.z)), self.residual)
+        self.state = tuple(self.code.syndrome(self.z))
         if self.channel_type == 'BSC':
             llr = np.log((1 - self.noise) / self.noise) * self.z
         # elif self.channel_type == 'AWGN':
@@ -77,7 +78,8 @@ class BitFlippingEnv(gym.Env):
         if np.all(self.state == 0):
             reward += 1
 
-        return (tuple(self.state), self.residual), reward, done, None
+        return tuple(self.state), reward, done, None
+        # return (tuple(self.state), self.residual), reward, done, None
 
     def render(self, mode='console'):
         if mode != 'console':

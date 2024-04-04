@@ -1,7 +1,7 @@
 clear; close all; clc
 run_bch = true;
 run_rm = true;
-channelType = "AWGN";
+channelType = "BSC";
 
 load('../Hmat/BCH_63_45_std.mat', 'H')
 %% BCH

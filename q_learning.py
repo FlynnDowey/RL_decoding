@@ -29,32 +29,22 @@ def train(env, num_episodes, alpha, mov_avg=1000, gamma=0.95, EbN0=1):
             sys.stdout.flush()   
         
         state = env.reset()
-
-        action = epsilon_greedy(Q, state, nA, eps)
         total_reward = 0
         while True:
+            action = epsilon_greedy(Q, state, nA, eps)
             next_state, reward, done, _ = env.step(action)
             total_reward += reward
             if not done:
-                next_action = epsilon_greedy(Q, next_state, nA, eps)
-                td_error = alpha*(reward + gamma*Q[next_state][next_action] - Q[state][action])
+                a_prime = np.argmax(Q[next_state])
+                td_error = alpha*(reward + gamma*Q[next_state][a_prime] - Q[state][action])
                 Q[state][action] += td_error
                 state = next_state
-                action = next_action
             if done:
-                td_error = alpha*(reward - Q[state][action])
-                Q[state][action] += td_error
                 tmp_scores.append(total_reward)
                 break
         if (i_episode % mov_avg == 0):
             avg_scores.append(np.mean(tmp_scores))
     
-    # plot performance      
-    # plt.plot(np.linspace(0,num_episodes,len(avg_scores), endpoint=False), np.asarray(avg_scores))
-    # plt.xlabel('Episode Number')
-    # plt.ylabel('Average Reward (Over Next %d Episodes)' % mov_avg)
-    # plt.savefig('./figs/reward_fun_sarsa_RM_3_6.png')
-    # plt.show()
     print(('Best Average Reward over %d Episodes: ' % mov_avg), np.max(avg_scores))   
     env.Q = Q 
     return Q

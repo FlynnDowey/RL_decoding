@@ -12,14 +12,17 @@ def epsilon_greedy(Q, state, nA, eps):
     
 def feature_vector_nn(state, a, n_features):
     x = np.zeros(n_features) # feature vector
-    syndrome, residual = state
+    # syndrome, residual = state
+    # x[:len(syndrome)] = syndrome  # fill first bits with syndrome
+    # x[len(syndrome)] = residual # this is the 'residual' term
+    # x[len(syndrome) + 1] = a
+    syndrome = state
     x[:len(syndrome)] = syndrome  # fill first bits with syndrome
-    x[len(syndrome)] = residual # this is the 'residual' term
-    x[len(syndrome) + 1] = a
+    x[len(syndrome)] = a # this is the 'residual' term
     x[-1] = 1 # bias
     return x
 
-def train(env, num_episodes, alpha, mov_avg=1000, gamma=0.99, EbN0=1):
+def train(env, num_episodes, alpha, mov_avg=1000, gamma=0.95, EbN0=1):
     ## Dimension of NN ##
     # y = V*h(Wx) where
     # - V is nxk
@@ -27,7 +30,7 @@ def train(env, num_episodes, alpha, mov_avg=1000, gamma=0.99, EbN0=1):
     # - d is dx1
     n = env.n
     k = 32
-    d = env.m + 3
+    d = env.m + 2
 
     # weights
     w = torch.randn(k, d, requires_grad=True)
@@ -114,7 +117,7 @@ def test(env, num_runs, w, v, EbN0=0.1):
     BER = 0
     env.set_noise(EbN0)
     max_iters = 10
-    d = 3 + env.m
+    d = 2 + env.m
     for iter in range(num_runs):
         state = env.reset()
         function = lambda s, a: v@torch.relu(torch.from_numpy(w@feature_vector_nn(s, a, d))).numpy()

@@ -3,9 +3,10 @@ import matplotlib.pyplot as plt
 from scipy.io import loadmat
 
 
-def plot_BER(x_vars, y_tab, y_param,  bench, bfd, units, title, figure_name):
-    plt.semilogy(x_vars, y_tab, marker='o', fillstyle='none', linestyle='--', linewidth=1.5, markersize=8, label='Tabular sarsa')
-    plt.semilogy(x_vars, bench, marker='o', fillstyle='none', linestyle='--', linewidth=1.5, markersize=8, label='Matlab')
+def plot_BER(x_vars, y_sarsa, y_qlearn, y_param,  bench, bfd, units, title, figure_name):
+    plt.semilogy(x_vars, y_sarsa, marker='o', fillstyle='none', linestyle='--', linewidth=1.5, markersize=8, label='Tabular sarsa')
+    plt.semilogy(x_vars, y_qlearn, marker='o', fillstyle='none', linestyle='--', linewidth=1.5, markersize=8, label='Tabular Q-learning')
+    plt.semilogy(x_vars, bench, marker='o', fillstyle='none', linestyle='--', linewidth=1.5, markersize=8, label='Matlab decoder')
     plt.semilogy(x_vars, y_param, marker='o', fillstyle='none', linestyle='--', linewidth=1.5, markersize=8, label='NN sarsa')
     plt.semilogy(x_vars, bfd, marker='o', fillstyle='none', linestyle='--', linewidth=1.5, markersize=8, label='BFD')
     plt.xlabel(units)
