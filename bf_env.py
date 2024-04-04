@@ -35,16 +35,16 @@ class BitFlippingEnv(gym.Env):
         self.state = (tuple(self.code.syndrome(self.z)), self.residual)
         if self.channel_type == 'BSC':
             llr = np.log((1 - self.noise) / self.noise) * self.z
-        elif self.channel_type == 'AWGN':
+        # elif self.channel_type == 'AWGN':
             # LLR: 
             #   - +ve value = more likely to be a zero
             #   - -ve value = more likely to be a one
             #   - smaller magnitude = less confident (we should flip)
 
-            self.sigma2 = 1/(2*self.r*10**(self.noise/10))
-            llr = 2*self.z_double/self.sigma2 # LLRs
+            # self.sigma2 = 1/(2*self.r*10**(self.noise/10))
+            # llr = 2*self.z_double/self.sigma2 # LLRs
             
-        self.llr_avg = np.abs(llr)
+        # self.llr_avg = np.abs(llr)
         return self.state
 
     def step(self, action):
@@ -58,20 +58,21 @@ class BitFlippingEnv(gym.Env):
         # Method used in paper (need to review):
         if self.channel_type == 'BSC':
             llr = np.log((1 - self.noise) / self.noise) * self.z
-        elif self.channel_type == 'AWGN':
+        # elif self.channel_type == 'AWGN':
             # if the bit we flipped has a postive LLR then it is a zero
             # if the bit we flipped has a negative LLR then it is a one
             # BPSK: {0, 1} -> {1, -1}
-            newbit = 1 if np.sign(self.z_double[action]) > 0 else -1
-            self.z_double[action] = newbit
-            llr = 2*self.z/self.sigma2 # LLRs
+            # newbit = 1 if np.sign(self.z_double[action]) > 0 else -1
+            # self.z_double[action] = newbit
+            # llr = 2*self.z/self.sigma2 # LLRs
 
 
-        self.llr_avg = (self.num_actions*self.llr_avg + np.abs(llr)) / (self.num_actions + 1)
-        self.path_penalty = - self.llr_avg / (10*np.mean(self.llr_avg))
-        # self.path_penalty = - llr / (10 * self.llr_avg)
+        # self.llr_avg = (self.num_actions*self.llr_avg + np.abs(llr)) / (self.num_actions + 1)
+        # self.path_penalty = - self.llr_avg / (10*np.mean(self.llr_avg))
+
+        reward = -1/10
         done = self.num_actions == 10 or np.all(self.state == 0)
-        reward = self.path_penalty[action]
+        # reward = self.path_penalty[action]
 
         if np.all(self.state == 0):
             reward += 1

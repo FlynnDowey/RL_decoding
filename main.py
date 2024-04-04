@@ -95,7 +95,7 @@ def BHC_BSC():
     dB_range = np.linspace(0.01, 0.45, 10) # testing noise
 
     # saving
-    figure_name = "BER_sarsa" +"_"+ code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel
+    figure_name = "BER_sarsa" +"_"+ code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel + "_newreward"
 
     # tabular setting
     agent_tabular = BCH_agent()
@@ -112,12 +112,16 @@ def BHC_BSC():
     bench = mat['BER']
     bench = bench[:, 0]
 
+    mat_bfd = loadmat('./benchmark/BFD_BER_BCH_BSC_63_45.mat')
+    bfd = mat_bfd['BER']
+    bfd = bfd[:, 0]
+
     # labeling figures
     name = channel + " " + code_type + "[" + code_label[0] + ", " + code_label[1] + "]" 
     x_range = [1-x for x in dB_range]
 
     # plot results
-    plot_BER(x_range, BER_tabular, BER_param, bench, '1 - prob. error in BSC', name, figure_name)
+    plot_BER(x_range, BER_tabular, BER_param, bfd, bench, '1 - prob. error in BSC', name, figure_name)
 
 ####################################################################################################################
 # 2. RM with BSC
@@ -131,7 +135,7 @@ def RM_BSC():
     dB_range = np.linspace(0.01, 0.45, 10) # testing noise
 
     # saving
-    figure_name = "BER_sarsa_" + code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel
+    figure_name = "BER_sarsa_" + code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel + "_newreward"
 
     # tabular setting
     agent_tabular = BCH_agent()
@@ -148,12 +152,16 @@ def RM_BSC():
     bench = mat['BER']
     bench = bench[:, 0]
 
+    mat_bfd = loadmat('./benchmark/BFD_BER_RM_BSC_3_6.mat')
+    bfd = mat_bfd['BER']
+    bfd = bfd[:, 0]
+
     # labeling figures
     name = channel + " " + code_type + "[" + code_label[0] + ", " + code_label[1] + "]" 
     x_range = [1-x for x in dB_range]
 
     # plot results
-    plot_BER(x_range, BER_tabular, BER_param, bench, '1 - prob. error in BSC', name, figure_name)
+    plot_BER(x_range, BER_tabular, BER_param, bench,bfd, '1 - prob. error in BSC', name, figure_name)
 
 ####################################################################################################################
 # 4. BCH with AWGN
@@ -167,7 +175,7 @@ def BHC_AWGN():
     dB_range = np.linspace(1, 7, 10) # testing noise
 
     # saving
-    figure_name = "BER_sarsa_" + code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel
+    figure_name = "BER_sarsa_" + code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel +"_newreward"
 
     # tabular setting
     agent_tabular = BCH_agent()
@@ -184,11 +192,15 @@ def BHC_AWGN():
     bench = mat['BER']
     bench = bench[:, 0]
 
+    mat_bfd = loadmat('./benchmark/BFD_BER_BCH_AWGN_63_45.mat')
+    bfd = mat_bfd['BER']
+    bfd = bfd[:, 0]
+
     # labeling figures
     name = channel + " " + code_type + "[" + code_label[0] + ", " + code_label[1] + "]" 
 
     # plot results
-    plot_BER(dB_range, BER_tabular, BER_param, bench, 'SNR (dB)', name, figure_name)
+    plot_BER(dB_range, BER_tabular, BER_param, bfd, bench, 'SNR (dB)', name, figure_name)
 
 ####################################################################################################################
 # 5. RM with AWGN
@@ -202,14 +214,14 @@ def RM_AWGN():
     dB_range = np.linspace(1, 7, 10) # testing noise
 
     # saving
-    figure_name = "BER_sarsa_" + code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel
+    figure_name = "BER_sarsa_" + code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel + "_newreward"
 
     # tabular setting
     agent_tabular = BCH_agent()
     _, env_tab = fit(agent_tabular, channel, noise, type='tabular')
     BER_tabular = eval(env_tab, channel, type='tabular')
 
-    # parameterized setting
+    # # parameterized setting
     agent_param = BCH_agent()
     _, _, env_param = fit(agent_param, channel, noise, type='param')
     BER_param = eval(env_param, channel, type='param')
@@ -219,11 +231,15 @@ def RM_AWGN():
     bench = mat['BER']
     bench = bench[:, 0]
 
+    mat_bfd = loadmat('./benchmark/BFD_BER_RM_AWGN_3_6.mat')
+    bfd = mat_bfd['BER']
+    bfd = bfd[:, 0]
+
     # labeling figures
     name = channel + " " + code_type + "[" + code_label[0] + ", " + code_label[1] + "]" 
 
     # plot results
-    plot_BER(dB_range, BER_tabular, BER_param, bench, 'SNR (dB)', name, figure_name)
+    plot_BER(dB_range, BER_tabular, BER_param, bench, bfd, 'SNR (dB)', name, figure_name)
 
 if __name__ == "__main__":
     main()
