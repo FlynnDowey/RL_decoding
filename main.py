@@ -181,7 +181,7 @@ def BHC_AWGN():
     dB_range = np.linspace(1, 7, 10) # testing noise
 
     # saving
-    figure_name = "BER_sarsa_" + code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel +"_newreward"
+    figure_name = "BER_sarsa_" + code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel
 
     # tabular setting
     agent_tabular = BCH_agent()
@@ -221,7 +221,7 @@ def RM_AWGN():
     dB_range = np.linspace(1, 7, 10) # testing noise
 
     # saving
-    figure_name = "BER_sarsa_" + code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel + "_newreward"
+    figure_name = "BER_sarsa_" + code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel
 
     # tabular setting
     agent_tabular = RM_agent(code_label)
