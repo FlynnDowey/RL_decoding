@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 from scipy.io import loadmat
 
 
-def plot_BER(x_vars, y_qlearn, bench, bfd, units, title, figure_name):
-    # plt.semilogy(x_vars, y_sarsa, marker='o', fillstyle='none', linestyle='--', linewidth=1.5, markersize=8, label='Tabular sarsa')
+def plot_BER(x_vars, y_sarsa, y_qlearn, bench, bfd, units, title, figure_name):
+    plt.semilogy(x_vars, y_sarsa, marker='o', fillstyle='none', linestyle='--', linewidth=1.5, markersize=8, label='Tabular sarsa')
     plt.semilogy(x_vars, y_qlearn, marker='o', fillstyle='none', linestyle='--', linewidth=1.5, markersize=8, label='Tabular Q-learning')
     plt.semilogy(x_vars, bench, marker='o', fillstyle='none', linestyle='--', linewidth=1.5, markersize=8, label='Traditional decoder')
     # plt.semilogy(x_vars, y_param, marker='o', fillstyle='none', linestyle='--', linewidth=1.5, markersize=8, label='NN sarsa')

@@ -186,7 +186,7 @@ def BHC_AWGN():
     # tabular setting
     agent_tabular = BCH_agent()
     _, _, env_sarsa, env_qlearn = fit(agent_tabular, channel, noise, type='tabular')
-    # BER_tabular_sarsa = eval(env_sarsa, channel, type='tabular')
+    BER_tabular_sarsa = eval(env_sarsa, channel, type='tabular')
     BER_tabular_qlearn = eval(env_qlearn, channel, type='tabular')
 
     # parameterized setting
@@ -207,7 +207,7 @@ def BHC_AWGN():
     name = 'BSC' + " " + code_type + "[" + code_label[0] + ", " + code_label[1] + "]" 
 
     # plot results
-    plot_BER(dB_range, BER_tabular_qlearn, bfd, bench, 'SNR (dB)', name, figure_name)
+    plot_BER(dB_range, BER_tabular_sarsa, BER_tabular_qlearn, bfd, bench, 'SNR (dB)', name, figure_name)
 
 ####################################################################################################################
 # 5. RM with AWGN
@@ -226,7 +226,7 @@ def RM_AWGN():
     # tabular setting
     agent_tabular = RM_agent(code_label)
     _, _, env_sarsa, env_qlearn = fit(agent_tabular, channel, noise, type='tabular')
-    # BER_tabular_sarsa = eval(env_sarsa, channel, type='tabular')
+    BER_tabular_sarsa = eval(env_sarsa, channel, type='tabular')
     BER_tabular_qlearn = eval(env_qlearn, channel, type='tabular')
 
     # # parameterized setting
@@ -247,7 +247,7 @@ def RM_AWGN():
     name = 'BSC' + " " + code_type + "[" + code_label[0] + ", " + code_label[1] + "]" 
 
     # plot results
-    plot_BER(dB_range, BER_tabular_qlearn, bench, bfd, 'SNR (dB)', name, figure_name)
+    plot_BER(dB_range, BER_tabular_sarsa, BER_tabular_qlearn, bench, bfd, 'SNR (dB)', name, figure_name)
 
 if __name__ == "__main__":
     main()
