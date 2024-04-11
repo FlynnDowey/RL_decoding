@@ -181,18 +181,18 @@ def BHC_AWGN():
     dB_range = np.linspace(1, 7, 10) # testing noise
 
     # saving
-    figure_name = "BER_sarsa_" + code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel
+    figure_name = "BER_Qlearning_" + code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel
 
     # tabular setting
     agent_tabular = BCH_agent()
     _, _, env_sarsa, env_qlearn = fit(agent_tabular, channel, noise, type='tabular')
-    BER_tabular_sarsa = eval(env_sarsa, channel, type='tabular')
-    # BER_tabular_qlearn = eval(env_qlearn, channel, type='tabular')
+    # BER_tabular_sarsa = eval(env_sarsa, channel, type='tabular')
+    BER_tabular_qlearn = eval(env_qlearn, channel, type='tabular')
 
     # parameterized setting
-    agent_param = BCH_agent()
-    _, _, env_param = fit(agent_param, channel, noise, type='param')
-    BER_param = eval(env_param, channel, type='param')
+    # agent_param = BCH_agent()
+    # _, _, env_param = fit(agent_param, channel, noise, type='param')
+    # BER_param = eval(env_param, channel, type='param')
 
     # load matlab decoder BER, store in 'bench'
     mat = loadmat('./benchmark/BER_BCH_AWGN_63_45.mat')
@@ -207,7 +207,7 @@ def BHC_AWGN():
     name = 'BSC' + " " + code_type + "[" + code_label[0] + ", " + code_label[1] + "]" 
 
     # plot results
-    plot_BER(dB_range, BER_tabular_sarsa, BER_param, bfd, bench, 'SNR (dB)', name, figure_name)
+    plot_BER(dB_range, BER_tabular_qlearn, bfd, bench, 'SNR (dB)', name, figure_name)
 
 ####################################################################################################################
 # 5. RM with AWGN
@@ -221,18 +221,18 @@ def RM_AWGN():
     dB_range = np.linspace(1, 7, 10) # testing noise
 
     # saving
-    figure_name = "BER_sarsa_" + code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel
+    figure_name = "BER_Qlearning_" + code_type + "_" + code_label[0] + "_" + code_label[1] + "_" + channel
 
     # tabular setting
     agent_tabular = RM_agent(code_label)
     _, _, env_sarsa, env_qlearn = fit(agent_tabular, channel, noise, type='tabular')
-    BER_tabular_sarsa = eval(env_sarsa, channel, type='tabular')
-    # BER_tabular_qlearn = eval(env_qlearn, channel, type='tabular')
+    # BER_tabular_sarsa = eval(env_sarsa, channel, type='tabular')
+    BER_tabular_qlearn = eval(env_qlearn, channel, type='tabular')
 
     # # parameterized setting
-    agent_param = RM_agent(code_label)
-    _, _, env_param = fit(agent_param, channel, noise, type='param')
-    BER_param = eval(env_param, channel, type='param')
+    # agent_param = RM_agent(code_label)
+    # _, _, env_param = fit(agent_param, channel, noise, type='param')
+    # BER_param = eval(env_param, channel, type='param')
 
     # load matlab decoder BER, store in 'bench'
     mat = loadmat('./benchmark/BER_RM_AWGN_3_6.mat')
@@ -247,7 +247,7 @@ def RM_AWGN():
     name = 'BSC' + " " + code_type + "[" + code_label[0] + ", " + code_label[1] + "]" 
 
     # plot results
-    plot_BER(dB_range, BER_tabular_sarsa, BER_param, bench, bfd, 'SNR (dB)', name, figure_name)
+    plot_BER(dB_range, BER_tabular_qlearn, bench, bfd, 'SNR (dB)', name, figure_name)
 
 if __name__ == "__main__":
     main()
